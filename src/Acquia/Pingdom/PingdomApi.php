@@ -355,6 +355,62 @@ class PingdomApi {
     return $data->contacts;
   }
 
+	/**
+	 * Gets the list of contacts stored in Pingdom.
+	 *
+	 * @param int $limit
+	 *   Limits the number of returned contacts to the specified quantity.
+	 * @param int $offset
+	 *   The offset for the listing (requires limit).
+	 *
+	 * @return string
+	 *   The returned response message.
+	 */
+	public function getNotificationContacts($limit = NULL, $offset = NULL) {
+		$parameters = array();
+		if (!empty($limit)) {
+			$parameters['limit'] = $limit;
+			if (!empty($offset)) {
+				$parameters['offset'] = $offset;
+			}
+		}
+		$data = $this->request('GET', 'notification_contacts', $parameters);
+		return $data->contacts;
+	}
+
+	/**
+	 * Modifies a notification contact.
+	 *
+	 * @param int $contact_id
+	 *   The ID of the check to modify.
+	 * @param array $parameters
+	 *   An array of settings by which to modify the contact.
+	 *
+	 * @return string
+	 *   The returned response message.
+	 */
+	public function modifyNotificationContact($contact_id, $parameters) {
+		$this->ensureParameters(array(
+			'contact_id' => $contact_id,
+			'parameters' => $parameters,
+		), __METHOD__);
+		$data = $this->request('PUT', "notification_contacts/${contact_id}", $parameters);
+		return $data->message;
+	}
+
+	/**
+	 * Adds a notification contact
+	 * @param array $parameters
+	 * @return stdClass
+	 * @throws MissingParameterException
+	 */
+	public function addNotificationContact($parameters) {
+		$this->ensureParameters(array(
+			'parameters' => $parameters,
+		), __METHOD__);
+		return $this->request('POST', "notification_contacts", $parameters);
+	}
+
   /**
    * Fetches a report about remaining account credits.
    *
