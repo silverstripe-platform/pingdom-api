@@ -411,6 +411,19 @@ class PingdomApi {
 		return $this->request('POST', "notification_contacts", $parameters);
 	}
 
+	/**
+	 * @param $contact_id
+	 * @return string
+	 * @throws MissingParameterException
+	 */
+	public function removeNotificationContact($contact_id) {
+		$this->ensureParameters(array(
+			'contact_id' => $contact_id,
+		), __METHOD__);
+		$data = $this->request('DELETE', "notification_contacts/${contact_id}");
+		return $data->message;
+	}
+
   /**
    * Fetches a report about remaining account credits.
    *
