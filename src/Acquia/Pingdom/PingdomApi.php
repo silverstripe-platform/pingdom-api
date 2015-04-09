@@ -408,7 +408,8 @@ class PingdomApi {
 		$this->ensureParameters(array(
 			'parameters' => $parameters,
 		), __METHOD__);
-		return $this->request('POST', "notification_contacts", $parameters);
+		$data =  $this->request('POST', "notification_contacts", $parameters);
+		return $data->contact;
 	}
 
 	/**
