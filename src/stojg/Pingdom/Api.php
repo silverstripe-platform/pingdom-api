@@ -482,7 +482,7 @@ class Api
 
         $headers[] = 'Content-Type: application/json; charset=utf-8';
 
-        if (empty($api_key)) {
+        if (empty($this->apiKey)) {
             throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the api_key parameter.');
         }
         $headers[] = 'App-Key: '.$this->apiKey;
@@ -496,9 +496,8 @@ class Api
             curl_setopt($handle, CURLOPT_POSTFIELDS, $body);
             $headers[] = 'Content-Length: '.strlen($body);
         }
-        if (!empty($headers)) {
-            curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
-        }
+        
+        curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($handle, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($handle, CURLOPT_URL, $this->buildRequestUrl($resource, $parameters));
         curl_setopt($handle, CURLOPT_USERPWD, $this->getAuth());
