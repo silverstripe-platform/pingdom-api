@@ -1,8 +1,6 @@
 Pingdom API
 ===========
 
-[![Build Status](https://travis-ci.org/acquia/pingdom-api.png?branch=master)](https://travis-ci.org/acquia/pingdom-api)
-
 This package is a PHP interface to the Pingdom REST API.
 
 Installation
@@ -37,6 +35,6 @@ composer update
 phpunit
 ```
 
-Using `composer update` without the `--no-dev` flag will download the phpunit
-dependency.
+Using `composer update` with the `--dev` flag will download the phpunit dependency.
 
+This is a continuation / fork of the discontinued Acquia library found at https://github.com/acquia/pingdom-api

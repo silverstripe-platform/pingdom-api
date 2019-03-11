@@ -1,11 +1,15 @@
 {
-    "name": "acquia/pingdom-api",
+    "name": "stojg/pingdom-api",
     "description": "A PHP library for interacting with the Pingdom REST API.",
     "license": "MIT",
     "authors": [
         {
             "name": "Richard Burford",
             "email": "richard.burford@acquia.com"
+        },
+        {
+            "name": "Stig Lindqvist",
+            "email": "me+packagist@stig.nz"
         }
     ],
     "require": {
