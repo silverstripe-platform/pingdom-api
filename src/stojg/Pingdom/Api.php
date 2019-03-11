@@ -593,7 +593,7 @@ class Api
      */
     private function getAuth()
     {
-        if (empty($username) || empty($password)) {
+        if (empty($this->username) || empty($this->password)) {
             throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the username and password');
         }
 
