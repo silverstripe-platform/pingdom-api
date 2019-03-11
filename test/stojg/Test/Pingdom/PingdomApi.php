@@ -1,13 +1,13 @@
 <?php
 
-use Acquia\Pingdom\MissingCredentialsException;
-use Acquia\Pingdom\MissingParameterException;
-use Acquia\Pingdom\PingdomApi;
+use stojg\Pingdom\Api;
+use stojg\Pingdom\MissingCredentialsException;
+use stojg\Pingdom\MissingParameterException;
 
 class UnitTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var PingdomApi
+     * @var Api
      */
     protected $pingdom;
 
@@ -19,7 +19,7 @@ class UnitTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->pingdom = new PingdomApi('username', 'password', 'api_key');
+        $this->pingdom = new Api('username', 'password', 'api_key');
     }
 
     public function tearDown()
@@ -34,7 +34,8 @@ class UnitTest extends PHPUnit_Framework_TestCase
     public function testMissingCredentialsUsername()
     {
         $this->expectException(MissingCredentialsException::class);
-        $api = new PingdomApi(null, 'password', 'api_key');
+        $api = new Api(null, 'password', 'api_key');
+        $api->getChecks();
     }
 
     /**
@@ -43,7 +44,8 @@ class UnitTest extends PHPUnit_Framework_TestCase
     public function testMissingCredentialsPassword()
     {
         $this->expectException(MissingCredentialsException::class);
-        $api = new PingdomApi('username', null, 'api_key');
+        $api = new Api('username', null, 'api_key');
+        $api->getChecks();
     }
 
     /**
@@ -52,7 +54,8 @@ class UnitTest extends PHPUnit_Framework_TestCase
     public function testMissingCredentialsApiKey()
     {
         $this->expectException(MissingCredentialsException::class);
-        $api = new PingdomApi('username', 'password', null);
+        $api = new Api('username', 'password', null);
+        $api->getChecks();
     }
 
     /**

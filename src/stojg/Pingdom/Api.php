@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Pingdom;
+namespace stojg\Pingdom;
 
-class PingdomApi
+class Api
 {
     const ENDPOINT = 'https://api.pingdom.com/api/2.1';
 
@@ -42,25 +42,13 @@ class PingdomApi
     private $gzip;
 
     /**
-     * Constructor.
-     *
-     * @param string $username
-     *                         The basic authentication username
-     * @param string $password
-     *                         The basic authentication password
-     * @param string $api_key
-     *                         The Pingdom API key
-     * @param bool   $gzip
-     *                         TRUE if responses from Pingdom should use gzip compression, otherwise
-     *                         FALSE
-     *
-     * @throws MissingCredentialsException
+     * @param string $username The basic authentication username
+     * @param string $password The basic authentication password
+     * @param string $api_key  The Pingdom API key
+     * @param bool   $gzip     false if responses from Pingdom should not use gzip compression
      */
-    public function __construct($username, $password, $api_key, $gzip = false)
+    public function __construct($username, $password, $api_key, $gzip = true)
     {
-        if (empty($username) || empty($password) || empty($api_key)) {
-            throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the username, password, and api_key parameters.');
-        }
         $this->username = $username;
         $this->password = $password;
         $this->apiKey = $api_key;
@@ -70,8 +58,7 @@ class PingdomApi
     /**
      * Sets the Pingdom Team account email address.
      *
-     * @param string $account_email
-     *                              A specific multi-account email address
+     * @param string $account_email A specific multi-account email address
      */
     public function setAccount($account_email)
     {
@@ -81,8 +68,9 @@ class PingdomApi
     /**
      * Fetches the list of domains being monitored in Pingdom.
      *
-     * @return array
-     *               An array of domains, indexed by check ID
+     * @throws MissingCredentialsException
+     *
+     * @return array An array of domains, indexed by check ID
      */
     public function getDomains()
     {
@@ -98,14 +86,12 @@ class PingdomApi
     /**
      * Retrieves a list of checks.
      *
-     * @param int $limit
-     *                    Limits the number of returned checks to the specified quantity (max value
-     *                    is 25000)
-     * @param int $offset
-     *                    Offset for listing (requires limit)
+     * @param int $limit  Limits the number of returned checks to the specified quantity (max is 25000)
+     * @param int $offset Offset for listing (requires limit)
      *
-     * @return array
-     *               An indexed array of checks
+     * @throws MissingCredentialsException
+     *
+     * @return array An indexed array of checks
      */
     public function getChecks($limit = null, $offset = null)
     {
@@ -124,13 +110,12 @@ class PingdomApi
     /**
      * Retrieves detailed information about a specified check.
      *
-     * @param int $check_id
-     *                      The ID of the check to retrieve
+     * @param int $check_id The ID of the check to retrieve
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
-     * @return array
-     *               An array of information about the check
+     * @return array An array of information about the check
      */
     public function getCheck($check_id)
     {
@@ -143,17 +128,15 @@ class PingdomApi
     /**
      * Adds a new check.
      *
-     * @param array $check
-     *                        An array representing the check to create. The only required properties
+     * @param array $check    An array representing the check to create. The only required properties
      *                        are "name" and "host", default values for the other properties will be
      *                        assumed if not explicitly provided.
-     * @param array $defaults
-     *                        An array of default settings for the check
+     * @param array $defaults An array of default settings for the check
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                A success message
+     * @return string - A success message
      */
     public function addCheck($check, $defaults = [])
     {
@@ -171,13 +154,11 @@ class PingdomApi
     /**
      * Pauses a check.
      *
-     * @param int $check_id
-     *                      The ID of the check to pause
+     * @param int $check_id The ID of the check to pause
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function pauseCheck($check_id)
     {
@@ -192,13 +173,11 @@ class PingdomApi
     /**
      * Unpauses a check.
      *
-     * @param int $check_id
-     *                      The ID of the check to pause
+     * @param int $check_id The ID of the check to pause
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function unpauseCheck($check_id)
     {
@@ -213,13 +192,11 @@ class PingdomApi
     /**
      * Pauses multiple checks.
      *
-     * @param array $check_ids
-     *                         An array of check IDs to pause
+     * @param array $check_ids An array of check IDs to pause
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function pauseChecks($check_ids)
     {
@@ -234,13 +211,11 @@ class PingdomApi
     /**
      * Unpauses multiple checks.
      *
-     * @param array $check_ids
-     *                         An array of check IDs to unpause
+     * @param array $check_ids An array of check IDs to unpause
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function unpauseChecks($check_ids)
     {
@@ -255,15 +230,13 @@ class PingdomApi
     /**
      * Modifies a check.
      *
-     * @param int   $check_id
-     *                          The ID of the check to modify
-     * @param array $parameters
-     *                          An array of settings by which to modify the check
+     * @param int   $check_id   The ID of the check to modify
+     * @param array $parameters An array of settings by which to modify the check
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function modifyCheck($check_id, $parameters)
     {
@@ -284,17 +257,15 @@ class PingdomApi
      * require the check IDs to be explicitly specified. See modifyAllChecks() if
      * you need to modify all checks at once.
      *
-     * @param array $check_ids
-     *                          An array of check IDs to modify
-     * @param array $parameters
-     *                          An array of parameters by which to modify the given checks:
+     * @param array $check_ids  An array of check IDs to modify
+     * @param array $parameters An array of parameters by which to modify the given checks:
      *                          - paused: TRUE for paused; FALSE for unpaused.
      *                          - resolution: An integer specifying the check frequency.
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function modifyChecks($check_ids, $parameters)
     {
@@ -316,15 +287,14 @@ class PingdomApi
      * This is a relatively destructive operation so please be careful that you
      * intend to modify all checks before calling this method.
      *
-     * @param array $parameters
-     *                          An array of parameters by which to modify the given checks:
+     * @param array $parameters An array of parameters by which to modify the given checks:
      *                          - paused: TRUE for paused; FALSE for unpaused.
      *                          - resolution: An integer specifying the check frequency.
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function modifyAllChecks($parameters)
     {
@@ -337,13 +307,12 @@ class PingdomApi
     /**
      * Removes a check.
      *
-     * @param int $check_id
-     *                      The ID of the check to remove
+     * @param int $check_id The ID of the check to remove
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function removeCheck($check_id)
     {
@@ -356,13 +325,12 @@ class PingdomApi
     /**
      * Removes multiple checks.
      *
-     * @param array $check_ids
-     *                         An array of check IDs to remove
+     * @param array $check_ids An array of check IDs to remove
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function removeChecks(array $check_ids)
     {
@@ -379,13 +347,12 @@ class PingdomApi
     /**
      * Gets the list of contacts stored in Pingdom.
      *
-     * @param int $limit
-     *                    Limits the number of returned contacts to the specified quantity
-     * @param int $offset
-     *                    The offset for the listing (requires limit)
+     * @param int $limit  Limits the number of returned contacts to the specified quantity
+     * @param int $offset The offset for the listing (requires limit)
      *
-     * @return string
-     *                The returned response message
+     * @throws MissingCredentialsException
+     *
+     * @return string The returned response message
      */
     public function getContacts($limit = null, $offset = null)
     {
@@ -404,8 +371,9 @@ class PingdomApi
     /**
      * Fetches a report about remaining account credits.
      *
-     * @return string
-     *                The returned response message
+     * @throws MissingCredentialsException
+     *
+     * @return string The returned response message
      */
     public function getCredits()
     {
@@ -417,8 +385,9 @@ class PingdomApi
     /**
      * Fetches a list of actions (alerts) that have been generated.
      *
-     * @return string
-     *                The returned response message
+     * @throws MissingCredentialsException
+     *
+     * @return string The returned response message
      */
     public function getActions()
     {
@@ -430,15 +399,13 @@ class PingdomApi
     /**
      * Fetches the latest root cause analysis results for a specified check.
      *
-     * @param int   $check_id
-     *                          The ID of the check
-     * @param array $parameters
-     *                          An array of parameters for the request
+     * @param int   $check_id   The ID of the check
+     * @param array $parameters An array of parameters for the request
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
      * @return string
-     *                The returned response message
      */
     public function getAnalysis($check_id, $parameters = [])
     {
@@ -451,17 +418,14 @@ class PingdomApi
     /**
      * Fetches the raw root cause analysis for a specified check.
      *
-     * @param int   $check_id
-     *                           The ID of the check
-     * @param int   $analysis_id
-     *                           The analysis ID
-     * @param array $parameters
-     *                           An array of parameters for the request
+     * @param int   $check_id    The ID of the check
+     * @param int   $analysis_id The analysis ID
+     * @param array $parameters  An array of parameters for the request
      *
-     * @throws \Acquia\Pingdom\MissingParameterException
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
      *
-     * @return string
-     *                The returned response message
+     * @return string The returned response message
      */
     public function getRawAnalysis($check_id, $analysis_id, $parameters = [])
     {
@@ -481,11 +445,8 @@ class PingdomApi
      * program execution. To avoid calling the Pingdom API with known malformed
      * data, we throw an exception if we find that something required is missing.
      *
-     * @param array  $parameters
-     *                           An array of parameters to check, keyed by parameter name with the
-     *                           parameter itself as the value
-     * @param string $method
-     *                           The calling method's name
+     * @param array  $parameters An array of parameters to check, keyed by parameter name with the parameter itself as the value
+     * @param string $method     The calling method's name
      *
      * @throws MissingParameterException
      */
@@ -504,27 +465,26 @@ class PingdomApi
     /**
      * Makes a request to the Pingdom REST API.
      *
-     * @param string $method
-     *                           The HTTP request method e.g. GET, POST, and PUT.
-     * @param string $resource
-     *                           The resource location e.g. checks/{checkid}.
-     * @param array  $parameters
-     *                           The request parameters, if any are required. This is used to build the
-     *                           URL query string.
-     * @param array  $headers
-     *                           Additional request headers, if any are required
-     * @param mixed  $body
-     *                           Data to use for the body of the request when using POST or PUT methods.
+     * @param string $method     The HTTP request method e.g. GET, POST, and PUT.
+     * @param string $resource   The resource location e.g. checks/{checkid}.
+     * @param array  $parameters The request parameters, if any are required. This is used to build the URL query string.
+     * @param array  $headers    Additional request headers, if any are required
+     * @param mixed  $body       Data to use for the body of the request when using POST or PUT methods.
      *                           This can be a JSON string literal or something that json_encode() accepts.
      *
-     * @return object
-     *                An object containing the response data
+     * @throws MissingCredentialsException
+     *
+     * @return object An object containing the response data
      */
     public function request($method, $resource, $parameters = [], $headers = [], $body = null)
     {
         $handle = curl_init();
 
         $headers[] = 'Content-Type: application/json; charset=utf-8';
+
+        if (empty($api_key)) {
+            throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the api_key parameter.');
+        }
         $headers[] = 'App-Key: '.$this->apiKey;
         if (!empty($this->accountEmail)) {
             $headers[] = 'Account-Email: '.$this->accountEmail;
@@ -583,13 +543,10 @@ class PingdomApi
      * "false" string representations. To preserve the convenience of using the
      * boolean types we will convert them here.
      *
-     * @param string $resource
-     *                           The resource path part of the URL, without leading or trailing slashes
-     * @param array  $parameters
-     *                           An array of query string parameters to append to the URL
+     * @param string $resource   The resource path part of the URL, without leading or trailing slashes
+     * @param array  $parameters An array of query string parameters to append to the URL
      *
-     * @return string
-     *                The fully-formed request URI
+     * @return string The fully-formed request URI
      */
     public function buildRequestUrl($resource, $parameters = [])
     {
@@ -606,13 +563,10 @@ class PingdomApi
     /**
      * Gets the human-readable error message for a failed request.
      *
-     * @param object $response_data
-     *                              The object containing the response data
-     * @param int    $status
-     *                              The HTTP status code
+     * @param object $response_data The object containing the response data
+     * @param int    $status        The HTTP status code
      *
-     * @return string
-     *                The error message
+     * @return string The error message
      */
     protected function getError($response_data, $status)
     {
@@ -634,11 +588,16 @@ class PingdomApi
     /**
      * Gets the authentication string necessary for making API calls.
      *
-     * @return string
-     *                The required authentication string
+     * @throws MissingCredentialsException
+     *
+     * @return string The required authentication string
      */
     private function getAuth()
     {
+        if (empty($username) || empty($password)) {
+            throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the username and password');
+        }
+
         return sprintf('%s:%s', $this->username, $this->password);
     }
 }

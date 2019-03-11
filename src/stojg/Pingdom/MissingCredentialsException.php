@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Pingdom;
+namespace stojg\Pingdom;
 
 class MissingCredentialsException extends \Exception
 {
