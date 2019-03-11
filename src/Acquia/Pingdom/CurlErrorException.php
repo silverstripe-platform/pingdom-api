@@ -2,5 +2,6 @@
 
 namespace Acquia\Pingdom;
 
-class CurlErrorException extends \RuntimeException {}
-
+class CurlErrorException extends \RuntimeException
+{
+}

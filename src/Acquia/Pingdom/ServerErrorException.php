@@ -2,5 +2,6 @@
 
 namespace Acquia\Pingdom;
 
-class ServerErrorException extends \RuntimeException {}
-
+class ServerErrorException extends \RuntimeException
+{
+}

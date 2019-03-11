@@ -2,5 +2,6 @@
 
 namespace Acquia\Pingdom;
 
-class MissingCredentialsException extends \Exception {}
-
+class MissingCredentialsException extends \Exception
+{
+}
