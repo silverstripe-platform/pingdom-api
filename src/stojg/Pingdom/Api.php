@@ -474,7 +474,7 @@ class Api
      *
      * @throws MissingCredentialsException
      *
-     * @return object An object containing the response data
+     * @return \stdClass An object containing the response data
      */
     public function request($method, $resource, $parameters = [], $headers = [], $body = null)
     {
@@ -496,7 +496,7 @@ class Api
             curl_setopt($handle, CURLOPT_POSTFIELDS, $body);
             $headers[] = 'Content-Length: '.strlen($body);
         }
-        
+
         curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($handle, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($handle, CURLOPT_URL, $this->buildRequestUrl($resource, $parameters));
