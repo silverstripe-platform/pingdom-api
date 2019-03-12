@@ -4,12 +4,12 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Richard Burford",
-            "email": "richard.burford@acquia.com"
-        },
-        {
             "name": "Stig Lindqvist",
             "email": "me+packagist@stig.nz"
+        },
+        {
+            "name": "Richard Burford",
+            "email": "richard.burford@acquia.com"
         }
     ],
     "require": {
