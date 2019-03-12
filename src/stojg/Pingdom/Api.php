@@ -345,30 +345,6 @@ class Api
     }
 
     /**
-     * Gets the list of contacts stored in Pingdom.
-     *
-     * @param int $limit  Limits the number of returned contacts to the specified quantity
-     * @param int $offset The offset for the listing (requires limit)
-     *
-     * @throws MissingCredentialsException
-     *
-     * @return string The returned response message
-     */
-    public function getContacts($limit = null, $offset = null)
-    {
-        $parameters = [];
-        if (!empty($limit)) {
-            $parameters['limit'] = $limit;
-            if (!empty($offset)) {
-                $parameters['offset'] = $offset;
-            }
-        }
-        $data = $this->request('GET', 'contacts', $parameters);
-
-        return $data->contacts;
-    }
-
-    /**
      * Fetches a report about remaining account credits.
      *
      * @throws MissingCredentialsException
@@ -436,6 +412,19 @@ class Api
         $data = $this->request('GET', "analysis/{$check_id}/{$analysis_id}", $parameters);
 
         return $data;
+    }
+
+    /**
+     * Fetches all users
+     *
+     * @return \stdClass
+     * @throws MissingCredentialsException
+     */
+    public function getUsers()
+    {
+        $data = $this->request('GET', 'users');
+
+        return $data->users;
     }
 
     /**
