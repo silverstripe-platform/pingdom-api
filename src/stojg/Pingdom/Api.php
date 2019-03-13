@@ -157,6 +157,7 @@ class Api
      * @param int $check_id The ID of the check to pause
      *
      * @throws MissingParameterException
+     * @throws MissingCredentialsException
      *
      * @return string The returned response message
      */
@@ -176,6 +177,7 @@ class Api
      * @param int $check_id The ID of the check to pause
      *
      * @throws MissingParameterException
+     * @throws MissingCredentialsException
      *
      * @return string The returned response message
      */
@@ -195,6 +197,7 @@ class Api
      * @param array $check_ids An array of check IDs to pause
      *
      * @throws MissingParameterException
+     * @throws MissingCredentialsException
      *
      * @return string The returned response message
      */
@@ -214,17 +217,15 @@ class Api
      * @param array $check_ids An array of check IDs to unpause
      *
      * @throws MissingParameterException
+     * @throws MissingCredentialsException
      *
      * @return string The returned response message
      */
     public function unpauseChecks($check_ids)
     {
         $this->ensureParameters(['check_ids' => $check_ids], __METHOD__);
-        $parameters = [
-            'paused' => false,
-        ];
 
-        return $this->modifyChecks($check_ids, $parameters);
+        return $this->modifyChecks($check_ids, ['paused' => false]);
     }
 
     /**
@@ -244,6 +245,7 @@ class Api
             'check_id' => $check_id,
             'parameters' => $parameters,
         ], __METHOD__);
+
         $data = $this->request('PUT', "checks/${check_id}", $parameters);
 
         return $data->message;
@@ -415,10 +417,11 @@ class Api
     }
 
     /**
-     * Fetches all users
+     * Fetches all users.
+     *
+     * @throws MissingCredentialsException
      *
      * @return \stdClass
-     * @throws MissingCredentialsException
      */
     public function getUsers()
     {
