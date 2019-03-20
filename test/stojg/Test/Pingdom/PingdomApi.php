@@ -73,7 +73,7 @@ class UnitTest extends PHPUnit_Framework_TestCase
     public function testMissingParameterAddCheckNull()
     {
         $this->expectException(MissingParameterException::class);
-        $this->pingdom->addCheck(null);
+        $this->pingdom->addCheck(['name' => null, 'host' => null, 'url' => null]);
     }
 
     /**
