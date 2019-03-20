@@ -136,9 +136,9 @@ class Api
      * @throws MissingCredentialsException
      * @throws MissingParameterException
      *
-     * @return string - A success message
+     * @return \stdClass - the response object
      */
-    public function addCheck($check, $defaults = [])
+    public function addCheck(array $check, array $defaults = [])
     {
         $this->ensureParameters([
             'name' => $check['name'],
@@ -146,9 +146,7 @@ class Api
             'url' => $check['url'],
         ], __METHOD__);
         $check += $defaults;
-        $data = $this->request('POST', 'checks', $check);
-
-        return sprintf('Created check %s for %s at http://%s%s', $data->check->id, $check['name'], $check['host'], $check['url']);
+        return $this->request('POST', 'checks', $check);
     }
 
     /**
