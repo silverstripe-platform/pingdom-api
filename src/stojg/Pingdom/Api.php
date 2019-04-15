@@ -2,6 +2,8 @@
 
 namespace stojg\Pingdom;
 
+use stdClass;
+
 class Api
 {
     const ENDPOINT = 'https://api.pingdom.com/api/2.1';
@@ -136,7 +138,7 @@ class Api
      * @throws MissingCredentialsException
      * @throws MissingParameterException
      *
-     * @return \stdClass - the response object
+     * @return stdClass - the response object
      */
     public function addCheck(array $check, array $defaults = [])
     {
@@ -146,6 +148,7 @@ class Api
             'url' => $check['url'],
         ], __METHOD__);
         $check += $defaults;
+
         return $this->request('POST', 'checks', $check);
     }
 
@@ -419,13 +422,35 @@ class Api
      *
      * @throws MissingCredentialsException
      *
-     * @return \stdClass
+     * @return stdClass
      */
     public function getUsers()
     {
         $data = $this->request('GET', 'users');
 
         return $data->users;
+    }
+
+    /**
+     * @param array $check
+     * @param array $defaults
+     *
+     * @throws MissingCredentialsException
+     * @throws MissingParameterException
+     *
+     * @return stdClass
+     */
+    public function getSingle(array $check, array $defaults = [])
+    {
+        $this->ensureParameters([
+            'host	' => $check['host'],
+            'type' => $check['type'],
+        ], __METHOD__);
+
+        $check += $defaults;
+        $data = $this->request('GET', 'single', $check);
+
+        return $data->result;
     }
 
     /**
@@ -464,7 +489,7 @@ class Api
      *
      * @throws MissingCredentialsException
      *
-     * @return \stdClass An object containing the response data
+     * @return stdClass An object containing the response data
      */
     public function request($method, $resource, $parameters = [], $headers = [], $body = null)
     {
