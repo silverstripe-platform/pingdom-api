@@ -488,12 +488,17 @@ class Api
      *                           This can be a JSON string literal or something that json_encode() accepts.
      *
      * @throws MissingCredentialsException
+     * @throws CurlErrorException
      *
      * @return stdClass An object containing the response data
      */
     public function request($method, $resource, $parameters = [], $headers = [], $body = null)
     {
         $handle = curl_init();
+
+        if (!is_resource($handle)) {
+            throw new CurlErrorException('curl_init() failed to create a resource');
+        }
 
         $headers[] = 'Content-Type: application/json; charset=utf-8';
 
@@ -527,9 +532,10 @@ class Api
         $response = curl_exec($handle);
         if (curl_errno($handle) > 0) {
             $curl_error = sprintf('Curl error: %s', curl_error($handle));
+            $errno = curl_errno($handle);
             curl_close($handle);
 
-            throw new CurlErrorException($curl_error, curl_errno($handle));
+            throw new CurlErrorException($curl_error, $errno);
         }
 
         $data = json_decode($response);
