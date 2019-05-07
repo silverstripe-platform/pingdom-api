@@ -529,6 +529,17 @@ class Api
         $gzip = !empty($this->gzip) ? 'gzip' : '';
         curl_setopt($handle, CURLOPT_ENCODING, $gzip);
 
+        $proxy = $this->getHttpProxy();
+        if (!empty($proxy)) {
+            $proxyParts = parse_url($proxy);
+            if (!empty($proxyParts['host'])) {
+                curl_setopt($handle, CURLOPT_PROXY, $proxyParts['host']);
+            }
+            if (!empty($proxyParts['port'])) {
+                curl_setopt($handle, CURLOPT_PROXYPORT, $proxyParts['port']);
+            }
+        }
+
         $response = curl_exec($handle);
         if (curl_errno($handle) > 0) {
             $curl_error = sprintf('Curl error: %s', curl_error($handle));
@@ -603,6 +614,30 @@ class Api
         }
 
         return $message;
+    }
+
+    /**
+     * If the system is configured with a http_proxy as a ENV variable, get that, otherwise an empty string is returned.
+     *
+     * @return string
+     */
+    private function getHttpProxy()
+    {
+        $secureAPI = false;
+
+        $apiParts = parse_url(self::ENDPOINT);
+        if (!empty($apiParts['scheme']) && $apiParts['scheme'] === 'https') {
+            $secureAPI = true;
+        }
+
+        if ($secureAPI && !empty(getenv('https_proxy'))) {
+            return getenv('https_proxy');
+        }
+        if (!$secureAPI && !empty(getenv('http_proxy'))) {
+            return getenv('http_proxy');
+        }
+
+        return '';
     }
 
     /**
