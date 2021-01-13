@@ -1,6 +1,6 @@
 <?php
 
-namespace stojg\Pingdom;
+namespace Silverstripe\Pingdom;
 
 class ServerErrorException extends \RuntimeException
 {

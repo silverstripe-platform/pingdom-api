@@ -1,10 +1,10 @@
 <?php
 
-use stojg\Pingdom\Api;
-use stojg\Pingdom\MissingCredentialsException;
-use stojg\Pingdom\MissingParameterException;
+use Silverstripe\Pingdom\Api;
+use Silverstripe\Pingdom\MissingCredentialsException;
+use Silverstripe\Pingdom\MissingParameterException;
 
-class UnitTest extends PHPUnit_Framework_TestCase
+class PingdomApi extends PHPUnit_Framework_TestCase
 {
     /**
      * @var Api
@@ -17,12 +17,12 @@ class UnitTest extends PHPUnit_Framework_TestCase
         'url' => 'url',
     ];
 
-    public function setUp()
+    protected function setUp()
     {
         $this->pingdom = new Api('username', 'password', 'api_key');
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $this->default_check = null;
         $this->pingdom = null;
@@ -273,7 +273,7 @@ class UnitTest extends PHPUnit_Framework_TestCase
             'int_false' => 0,
         ];
         $coerced = $this->pingdom->buildRequestUrl('resource', $parameters);
-        $expected = 'https://api.pingdom.com/api/2.1/resource?bool_true=true&bool_false=false&int_true=1&int_false=0';
+        $expected = 'https://api.pingdom.com/api/3.1/resource?bool_true=true&bool_false=false&int_true=1&int_false=0';
         $this->assertSame($coerced, $expected);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace stojg\Pingdom;
+namespace Silverstripe\Pingdom;
 
 class MissingParameterException extends \Exception
 {

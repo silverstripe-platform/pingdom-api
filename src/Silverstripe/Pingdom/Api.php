@@ -1,12 +1,12 @@
 <?php
 
-namespace stojg\Pingdom;
+namespace Silverstripe\Pingdom;
 
 use stdClass;
 
 class Api
 {
-    const ENDPOINT = 'https://api.pingdom.com/api/2.1';
+    const ENDPOINT = 'https://api.pingdom.com/api/3.1';
 
     /**
      * The username to access the service.
@@ -432,9 +432,6 @@ class Api
     }
 
     /**
-     * @param array $check
-     * @param array $defaults
-     *
      * @throws MissingCredentialsException
      * @throws MissingParameterException
      *
