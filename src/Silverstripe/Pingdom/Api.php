@@ -9,32 +9,11 @@ class Api
     const ENDPOINT = 'https://api.pingdom.com/api/3.1';
 
     /**
-     * The username to access the service.
-     *
-     * @var string
-     */
-    private $username;
-
-    /**
-     * The password to access the service.
-     *
-     * @var string
-     */
-    private $password;
-
-    /**
      * The Pingdom API key.
      *
      * @var string
      */
     private $apiKey;
-
-    /**
-     * The team account email address used for multi-user authentication.
-     *
-     * @var string
-     */
-    private $accountEmail;
 
     /**
      * Indicates whether requests should use gzip compression.
@@ -44,27 +23,13 @@ class Api
     private $gzip;
 
     /**
-     * @param string $username The basic authentication username
-     * @param string $password The basic authentication password
-     * @param string $api_key  The Pingdom API key
-     * @param bool   $gzip     false if responses from Pingdom should not use gzip compression
+     * @param string $api_key The Pingdom API key
+     * @param bool   $gzip    false if responses from Pingdom should not use gzip compression
      */
-    public function __construct($username, $password, $api_key, $gzip = true)
+    public function __construct($api_key, $gzip = true)
     {
-        $this->username = $username;
-        $this->password = $password;
         $this->apiKey = $api_key;
         $this->gzip = $gzip;
-    }
-
-    /**
-     * Sets the Pingdom Team account email address.
-     *
-     * @param string $account_email A specific multi-account email address
-     */
-    public function setAccount($account_email)
-    {
-        $this->accountEmail = $account_email;
     }
 
     /**
@@ -404,7 +369,7 @@ class Api
      * @throws MissingCredentialsException
      * @throws MissingParameterException
      *
-     * @return string The returned response message
+     * @return stdClass The returned response message
      */
     public function getRawAnalysis($check_id, $analysis_id, $parameters = [])
     {

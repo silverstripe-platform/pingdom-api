@@ -19,7 +19,7 @@ class PingdomApi extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->pingdom = new Api('username', 'password', 'api_key');
+        $this->pingdom = new Api('api_key');
     }
 
     protected function tearDown()
