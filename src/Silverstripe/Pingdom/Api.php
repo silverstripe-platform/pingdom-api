@@ -467,10 +467,7 @@ class Api
         if (empty($this->apiKey)) {
             throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the api_key parameter.');
         }
-        $headers[] = 'App-Key: '.$this->apiKey;
-        if (!empty($this->accountEmail)) {
-            $headers[] = 'Account-Email: '.$this->accountEmail;
-        }
+        $headers[] = 'Authorization: Bearer '.$this->apiKey;
         if (!empty($body)) {
             if (!is_string($body)) {
                 $body = json_encode($body);
@@ -482,7 +479,6 @@ class Api
         curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($handle, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($handle, CURLOPT_URL, $this->buildRequestUrl($resource, $parameters));
-        curl_setopt($handle, CURLOPT_USERPWD, $this->getAuth());
         curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($handle, CURLOPT_MAXREDIRS, 10);
         curl_setopt($handle, CURLOPT_USERAGENT, 'PingdomApi/1.0');
@@ -567,19 +563,4 @@ class Api
         return $message;
     }
 
-    /**
-     * Gets the authentication string necessary for making API calls.
-     *
-     * @throws MissingCredentialsException
-     *
-     * @return string The required authentication string
-     */
-    private function getAuth()
-    {
-        if (empty($this->username) || empty($this->password)) {
-            throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the username and password');
-        }
-
-        return sprintf('%s:%s', $this->username, $this->password);
-    }
 }

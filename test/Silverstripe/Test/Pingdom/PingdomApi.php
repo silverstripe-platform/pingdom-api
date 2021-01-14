@@ -3,8 +3,9 @@
 use Silverstripe\Pingdom\Api;
 use Silverstripe\Pingdom\MissingCredentialsException;
 use Silverstripe\Pingdom\MissingParameterException;
+use PHPUnit\Framework\TestCase;
 
-class PingdomApi extends PHPUnit_Framework_TestCase
+class PingdomApi extends TestCase
 {
     /**
      * @var Api
@@ -17,36 +18,17 @@ class PingdomApi extends PHPUnit_Framework_TestCase
         'url' => 'url',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->pingdom = new Api('api_key');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->default_check = null;
         $this->pingdom = null;
     }
 
-    /**
-     * Test the Pingdom username is required.
-     */
-    public function testMissingCredentialsUsername()
-    {
-        $this->expectException(MissingCredentialsException::class);
-        $api = new Api(null, 'password', 'api_key');
-        $api->getChecks();
-    }
-
-    /**
-     * Test the Pingdom password is required.
-     */
-    public function testMissingCredentialsPassword()
-    {
-        $this->expectException(MissingCredentialsException::class);
-        $api = new Api('username', null, 'api_key');
-        $api->getChecks();
-    }
 
     /**
      * Test the Pingdom API key is required.
@@ -54,7 +36,7 @@ class PingdomApi extends PHPUnit_Framework_TestCase
     public function testMissingCredentialsApiKey()
     {
         $this->expectException(MissingCredentialsException::class);
-        $api = new Api('username', 'password', null);
+        $api = new Api(null);
         $api->getChecks();
     }
 
