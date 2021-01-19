@@ -562,5 +562,4 @@ class Api
 
         return $message;
     }
-
 }

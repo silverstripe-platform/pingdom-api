@@ -1,9 +1,9 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use Silverstripe\Pingdom\Api;
 use Silverstripe\Pingdom\MissingCredentialsException;
 use Silverstripe\Pingdom\MissingParameterException;
-use PHPUnit\Framework\TestCase;
 
 class PingdomApi extends TestCase
 {
@@ -28,7 +28,6 @@ class PingdomApi extends TestCase
         $this->default_check = null;
         $this->pingdom = null;
     }
-
 
     /**
      * Test the Pingdom API key is required.
