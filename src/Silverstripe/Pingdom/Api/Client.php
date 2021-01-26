@@ -1,10 +1,15 @@
 <?php
 
-namespace Silverstripe\Pingdom;
+namespace Silverstripe\Pingdom\Api;
 
+use Silverstripe\Pingdom\Api\Exception\ClientErrorException;
+use Silverstripe\Pingdom\Api\Exception\CurlErrorException;
+use Silverstripe\Pingdom\Api\Exception\MissingCredentialsException;
+use Silverstripe\Pingdom\Api\Exception\MissingParameterException;
+use Silverstripe\Pingdom\Api\Exception\ServerErrorException;
 use stdClass;
 
-class Api
+class Client
 {
     const ENDPOINT = 'https://api.pingdom.com/api/3.1';
 

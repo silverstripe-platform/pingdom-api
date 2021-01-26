@@ -1,14 +1,14 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Silverstripe\Pingdom\Api;
-use Silverstripe\Pingdom\MissingCredentialsException;
-use Silverstripe\Pingdom\MissingParameterException;
+use Silverstripe\Pingdom\Api\Client;
+use Silverstripe\Pingdom\Api\Exception\MissingCredentialsException;
+use Silverstripe\Pingdom\Api\Exception\MissingParameterException;
 
 class PingdomApi extends TestCase
 {
     /**
-     * @var Api
+     * @var Client
      */
     protected $pingdom;
 
@@ -20,7 +20,7 @@ class PingdomApi extends TestCase
 
     protected function setUp(): void
     {
-        $this->pingdom = new Api('api_key');
+        $this->pingdom = new Client('api_key');
     }
 
     protected function tearDown(): void
@@ -35,7 +35,7 @@ class PingdomApi extends TestCase
     public function testMissingCredentialsApiKey()
     {
         $this->expectException(MissingCredentialsException::class);
-        $api = new Api(null);
+        $api = new Client(null);
         $api->getChecks();
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Silverstripe\Pingdom;
+namespace Silverstripe\Pingdom\Api\Exception;
 
 class CurlErrorException extends \RuntimeException
 {
