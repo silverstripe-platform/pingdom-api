@@ -4,10 +4,10 @@
 require __DIR__."/../vendor/autoload.php";
 
 use Symfony\Component\Console\Application;
-use Silverstripe\PingdomCLI\GetChecks;
-$application = new Application();
+use Silverstripe\Pingdom\Command\Checks\Get;
+$application = new Application('Pingdom Cli');
 
 // ... register commands
-$application->add(new GetChecks());
+$application->add(new Get());
 
 $application->run();
