@@ -38,3 +38,6 @@ jobs:
       run: vendor/bin/phpunit
     - name: Run codestyle check
       run: vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no
+    #perform basic static checks but level 5 doesn't pass
+    - name: run static analysis
+      run: vendor/bin/phpstan analyse src/ --level 4
