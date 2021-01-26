@@ -472,20 +472,20 @@ class Api
             if (!is_string($body)) {
                 $body = json_encode($body);
             }
-            curl_setopt($handle, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($handle, \CURLOPT_POSTFIELDS, $body);
             $headers[] = 'Content-Length: '.strlen($body);
         }
 
-        curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($handle, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($handle, CURLOPT_URL, $this->buildRequestUrl($resource, $parameters));
-        curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($handle, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($handle, CURLOPT_USERAGENT, 'PingdomApi/1.0');
-        curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($handle, CURLOPT_TIMEOUT, 10);
+        curl_setopt($handle, \CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($handle, \CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($handle, \CURLOPT_URL, $this->buildRequestUrl($resource, $parameters));
+        curl_setopt($handle, \CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($handle, \CURLOPT_MAXREDIRS, 10);
+        curl_setopt($handle, \CURLOPT_USERAGENT, 'PingdomApi/1.0');
+        curl_setopt($handle, \CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($handle, \CURLOPT_TIMEOUT, 10);
         $gzip = !empty($this->gzip) ? 'gzip' : '';
-        curl_setopt($handle, CURLOPT_ENCODING, $gzip);
+        curl_setopt($handle, \CURLOPT_ENCODING, $gzip);
 
         $response = curl_exec($handle);
         if (curl_errno($handle) > 0) {
@@ -497,7 +497,7 @@ class Api
         }
 
         $data = json_decode($response);
-        $status = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        $status = curl_getinfo($handle, \CURLINFO_HTTP_CODE);
         curl_close($handle);
 
         $status_class = (int) floor($status / 100);
