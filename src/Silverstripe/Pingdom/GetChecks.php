@@ -1,6 +1,6 @@
 <?php
 
-namespace Silverstripe\PingdomCLI;
+namespace Silverstripe\Pingdom;
 
 use Silverstripe\Pingdom\Api;
 use Symfony\Component\Console\Command\Command;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class GetChecks extends Command
 {
     // the name of the command (the part after "bin/console")
-    protected static $defaultName = 'get-checks';
+    protected static $defaultName = 'checks:get';
     private $pingdomToken;
 
     protected function configure()
@@ -31,14 +31,14 @@ class GetChecks extends Command
             $output->writeln('No authentication token provided');
             $output->writeln('exiting');
 
-            return 1;
+            return Command::FAILURE;
         }
         $pingdom = new Api($this->pingdomToken);
         $checks = $pingdom->getChecks();
         if ($input->getOption('json')) {
             $output->writeln(\json_encode($checks));
 
-            return 0;
+            return Command::SUCCESS;
         }
         if (count($checks) > 0) {
             $table = new Table($output);
@@ -49,11 +49,11 @@ class GetChecks extends Command
             }
             $table->render();
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $output->writeln('no data from pingdom api');
 
-        return 1;
+        return Command::FAILURE;
     }
 }
