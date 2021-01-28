@@ -24,7 +24,7 @@ class Get extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (strlen($input->getArgument('api-key')) > 0) {
+        if (count($input->getArgument('api-key')) > 0) {
             $this->pingdomToken = $input->getArgument('api-key');
         } elseif (getenv('PINGDOM_API_TOKEN')) {
             $this->pingdomToken = getenv('PINGDOM_API_TOKEN');
