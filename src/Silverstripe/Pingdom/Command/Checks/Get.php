@@ -32,14 +32,14 @@ class Get extends Command
             $output->writeln('No authentication token provided');
             $output->writeln('exiting');
 
-            return Command::FAILURE;
+            return 1;
         }
         $pingdom = new Client($this->pingdomToken);
         $checks = $pingdom->getChecks();
         if ($input->getOption('json')) {
             $output->writeln(\json_encode($checks));
 
-            return Command::SUCCESS;
+            return 0;
         }
         if (count($checks) > 0) {
             $table = new Table($output);
@@ -50,11 +50,11 @@ class Get extends Command
             }
             $table->render();
 
-            return Command::SUCCESS;
+            return 0;
         }
 
         $output->writeln('no data from pingdom api');
 
-        return Command::FAILURE;
+        return 1;
     }
 }
