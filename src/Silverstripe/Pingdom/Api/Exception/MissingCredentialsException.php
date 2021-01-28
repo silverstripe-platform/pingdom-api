@@ -1,6 +1,6 @@
 <?php
 
-namespace stojg\Pingdom;
+namespace Silverstripe\Pingdom\Api\Exception;
 
 class MissingCredentialsException extends \Exception
 {

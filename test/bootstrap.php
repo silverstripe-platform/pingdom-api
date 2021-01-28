@@ -7,5 +7,5 @@ if (!file_exists($autoload_file)) {
 require $autoload_file;
 
 $loader = new \Composer\Autoload\ClassLoader();
-$loader->add('Acquia\Pingdom\Test', 'test');
+$loader->add('Silverstripe\Pingdom\Test', 'test');
 $loader->register();

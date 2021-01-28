@@ -1,26 +1,17 @@
 <?php
 
-namespace stojg\Pingdom;
+namespace Silverstripe\Pingdom\Api;
 
+use Silverstripe\Pingdom\Api\Exception\ClientErrorException;
+use Silverstripe\Pingdom\Api\Exception\CurlErrorException;
+use Silverstripe\Pingdom\Api\Exception\MissingCredentialsException;
+use Silverstripe\Pingdom\Api\Exception\MissingParameterException;
+use Silverstripe\Pingdom\Api\Exception\ServerErrorException;
 use stdClass;
 
-class Api
+class Client
 {
-    const ENDPOINT = 'https://api.pingdom.com/api/2.1';
-
-    /**
-     * The username to access the service.
-     *
-     * @var string
-     */
-    private $username;
-
-    /**
-     * The password to access the service.
-     *
-     * @var string
-     */
-    private $password;
+    const ENDPOINT = 'https://api.pingdom.com/api/3.1';
 
     /**
      * The Pingdom API key.
@@ -30,13 +21,6 @@ class Api
     private $apiKey;
 
     /**
-     * The team account email address used for multi-user authentication.
-     *
-     * @var string
-     */
-    private $accountEmail;
-
-    /**
      * Indicates whether requests should use gzip compression.
      *
      * @var bool
@@ -44,27 +28,13 @@ class Api
     private $gzip;
 
     /**
-     * @param string $username The basic authentication username
-     * @param string $password The basic authentication password
-     * @param string $api_key  The Pingdom API key
-     * @param bool   $gzip     false if responses from Pingdom should not use gzip compression
+     * @param string $api_key The Pingdom API key
+     * @param bool   $gzip    false if responses from Pingdom should not use gzip compression
      */
-    public function __construct($username, $password, $api_key, $gzip = true)
+    public function __construct($api_key, $gzip = true)
     {
-        $this->username = $username;
-        $this->password = $password;
         $this->apiKey = $api_key;
         $this->gzip = $gzip;
-    }
-
-    /**
-     * Sets the Pingdom Team account email address.
-     *
-     * @param string $account_email A specific multi-account email address
-     */
-    public function setAccount($account_email)
-    {
-        $this->accountEmail = $account_email;
     }
 
     /**
@@ -404,7 +374,7 @@ class Api
      * @throws MissingCredentialsException
      * @throws MissingParameterException
      *
-     * @return string The returned response message
+     * @return stdClass The returned response message
      */
     public function getRawAnalysis($check_id, $analysis_id, $parameters = [])
     {
@@ -432,9 +402,6 @@ class Api
     }
 
     /**
-     * @param array $check
-     * @param array $defaults
-     *
      * @throws MissingCredentialsException
      * @throws MissingParameterException
      *
@@ -505,29 +472,25 @@ class Api
         if (empty($this->apiKey)) {
             throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the api_key parameter.');
         }
-        $headers[] = 'App-Key: '.$this->apiKey;
-        if (!empty($this->accountEmail)) {
-            $headers[] = 'Account-Email: '.$this->accountEmail;
-        }
+        $headers[] = 'Authorization: Bearer '.$this->apiKey;
         if (!empty($body)) {
             if (!is_string($body)) {
                 $body = json_encode($body);
             }
-            curl_setopt($handle, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($handle, \CURLOPT_POSTFIELDS, $body);
             $headers[] = 'Content-Length: '.strlen($body);
         }
 
-        curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($handle, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($handle, CURLOPT_URL, $this->buildRequestUrl($resource, $parameters));
-        curl_setopt($handle, CURLOPT_USERPWD, $this->getAuth());
-        curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($handle, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($handle, CURLOPT_USERAGENT, 'PingdomApi/1.0');
-        curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($handle, CURLOPT_TIMEOUT, 10);
+        curl_setopt($handle, \CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($handle, \CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($handle, \CURLOPT_URL, $this->buildRequestUrl($resource, $parameters));
+        curl_setopt($handle, \CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($handle, \CURLOPT_MAXREDIRS, 10);
+        curl_setopt($handle, \CURLOPT_USERAGENT, 'PingdomApi/1.0');
+        curl_setopt($handle, \CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($handle, \CURLOPT_TIMEOUT, 10);
         $gzip = !empty($this->gzip) ? 'gzip' : '';
-        curl_setopt($handle, CURLOPT_ENCODING, $gzip);
+        curl_setopt($handle, \CURLOPT_ENCODING, $gzip);
 
         $response = curl_exec($handle);
         if (curl_errno($handle) > 0) {
@@ -539,7 +502,7 @@ class Api
         }
 
         $data = json_decode($response);
-        $status = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        $status = curl_getinfo($handle, \CURLINFO_HTTP_CODE);
         curl_close($handle);
 
         $status_class = (int) floor($status / 100);
@@ -603,21 +566,5 @@ class Api
         }
 
         return $message;
-    }
-
-    /**
-     * Gets the authentication string necessary for making API calls.
-     *
-     * @throws MissingCredentialsException
-     *
-     * @return string The required authentication string
-     */
-    private function getAuth()
-    {
-        if (empty($this->username) || empty($this->password)) {
-            throw new MissingCredentialsException('Missing Pingdom credentials. Please supply the username and password');
-        }
-
-        return sprintf('%s:%s', $this->username, $this->password);
     }
 }

@@ -1,13 +1,14 @@
 <?php
 
-use stojg\Pingdom\Api;
-use stojg\Pingdom\MissingCredentialsException;
-use stojg\Pingdom\MissingParameterException;
+use PHPUnit\Framework\TestCase;
+use Silverstripe\Pingdom\Api\Client;
+use Silverstripe\Pingdom\Api\Exception\MissingCredentialsException;
+use Silverstripe\Pingdom\Api\Exception\MissingParameterException;
 
-class UnitTest extends PHPUnit_Framework_TestCase
+class PingdomApi extends TestCase
 {
     /**
-     * @var Api
+     * @var Client
      */
     protected $pingdom;
 
@@ -17,35 +18,15 @@ class UnitTest extends PHPUnit_Framework_TestCase
         'url' => 'url',
     ];
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->pingdom = new Api('username', 'password', 'api_key');
+        $this->pingdom = new Client('api_key');
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         $this->default_check = null;
         $this->pingdom = null;
-    }
-
-    /**
-     * Test the Pingdom username is required.
-     */
-    public function testMissingCredentialsUsername()
-    {
-        $this->expectException(MissingCredentialsException::class);
-        $api = new Api(null, 'password', 'api_key');
-        $api->getChecks();
-    }
-
-    /**
-     * Test the Pingdom password is required.
-     */
-    public function testMissingCredentialsPassword()
-    {
-        $this->expectException(MissingCredentialsException::class);
-        $api = new Api('username', null, 'api_key');
-        $api->getChecks();
     }
 
     /**
@@ -54,7 +35,7 @@ class UnitTest extends PHPUnit_Framework_TestCase
     public function testMissingCredentialsApiKey()
     {
         $this->expectException(MissingCredentialsException::class);
-        $api = new Api('username', 'password', null);
+        $api = new Client(null);
         $api->getChecks();
     }
 
@@ -273,7 +254,7 @@ class UnitTest extends PHPUnit_Framework_TestCase
             'int_false' => 0,
         ];
         $coerced = $this->pingdom->buildRequestUrl('resource', $parameters);
-        $expected = 'https://api.pingdom.com/api/2.1/resource?bool_true=true&bool_false=false&int_true=1&int_false=0';
+        $expected = 'https://api.pingdom.com/api/3.1/resource?bool_true=true&bool_false=false&int_true=1&int_false=0';
         $this->assertSame($coerced, $expected);
     }
 }

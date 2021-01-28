@@ -1,8 +1,12 @@
 {
-    "name": "stojg/pingdom-api",
+    "name": "silverstripeltd/pingdom-api",
     "description": "A PHP library for interacting with the Pingdom REST API.",
     "license": "MIT",
     "authors": [
+        {
+            "name": "Moss Cantwell",
+            "email": "moss@silverstripe.com"
+        },
         {
             "name": "Stig Lindqvist",
             "email": "me+packagist@stig.nz"
@@ -14,15 +18,17 @@
     ],
     "require": {
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "symfony/console": "^5"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
-        "friendsofphp/php-cs-fixer": "^2.0"
+        "phpunit/phpunit": "^7",
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "phpstan/phpstan": "^0.12"
     },
     "autoload": {
         "psr-0": {
-            "stojg": "src/"
+            "Silverstripe": "src/"
         }
     }
 }
