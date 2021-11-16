@@ -238,7 +238,21 @@ class PingdomApi extends TestCase
             'array' => [],
         ];
 
-        $this->pingdom->ensureParameters($parameters, __METHOD__);
+        // Assert null as a function that expects nothing should return null
+        // Reference: https://stackoverflow.com/a/45850982
+        $this->assertNull($this->pingdom->ensureParameters($parameters, __METHOD__));
+    }
+
+    /**
+     * Test setProxy() stores proxy settings to be consumed by curl.
+     */
+    public function testSetProxy()
+    {
+        $this->pingdom->setProxy('test', 1234);
+
+        // Ensure private attributes are set as expected.
+        $this->assertAttributeEquals('test', 'proxyHost', $this->pingdom);
+        $this->assertAttributeEquals(1234, 'proxyPort', $this->pingdom);
     }
 
     /**

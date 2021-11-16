@@ -28,6 +28,20 @@ class Client
     private $gzip;
 
     /**
+     * Proxy Host value for curl.
+     *
+     * @var string
+     */
+    private $proxyHost;
+
+    /**
+     * Proxy port value for curl.
+     *
+     * @var int
+     */
+    private $proxyPort;
+
+    /**
      * @param string $api_key The Pingdom API key
      * @param bool   $gzip    false if responses from Pingdom should not use gzip compression
      */
@@ -445,6 +459,18 @@ class Client
     }
 
     /**
+     * Set curl proxy settings.
+     *
+     * @param string $host Proxy hostname/IP
+     * @param int    $port Proxy port
+     */
+    public function setProxy(string $host, int $port)
+    {
+        $this->proxyHost = $host;
+        $this->proxyPort = $port;
+    }
+
+    /**
      * Makes a request to the Pingdom REST API.
      *
      * @param string $method     The HTTP request method e.g. GET, POST, and PUT.
@@ -491,6 +517,12 @@ class Client
         curl_setopt($handle, \CURLOPT_TIMEOUT, 10);
         $gzip = !empty($this->gzip) ? 'gzip' : '';
         curl_setopt($handle, \CURLOPT_ENCODING, $gzip);
+
+        // Set proxy configuration
+        if ($this->proxyHost && $this->proxyPort) {
+            curl_setopt($ch, \CURLOPT_PROXY, $this->proxyHost);
+            curl_setopt($ch, \CURLOPT_PROXYPORT, $this->proxyPort);
+        }
 
         $response = curl_exec($handle);
         if (curl_errno($handle) > 0) {
