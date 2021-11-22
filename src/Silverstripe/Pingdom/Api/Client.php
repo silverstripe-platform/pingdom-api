@@ -520,8 +520,8 @@ class Client
 
         // Set proxy configuration
         if ($this->proxyHost && $this->proxyPort) {
-            curl_setopt($ch, \CURLOPT_PROXY, $this->proxyHost);
-            curl_setopt($ch, \CURLOPT_PROXYPORT, $this->proxyPort);
+            curl_setopt($handle, \CURLOPT_PROXY, $this->proxyHost);
+            curl_setopt($handle, \CURLOPT_PROXYPORT, $this->proxyPort);
         }
 
         $response = curl_exec($handle);
